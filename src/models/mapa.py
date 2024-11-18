@@ -6,12 +6,12 @@ class Mapa:
     def __init__(self, ancho, alto, fondo, tienda_img, recompensa_img, vidas_img):
         """
         Clase para configurar y renderizar el mapa.
-        :param ancho: Ancho de la ventana
-        :param alto: Alto de la ventana
-        :param fondo: Ruta de la imagen de fondo
-        :param tienda_img: Ruta de la imagen de la tienda
-        :param recompensa_img: Ruta de la imagen del mostrador de recompensa
-        :param vidas_img: Ruta de la imagen del mostrador de vidas
+        ancho: Ancho de la ventana
+        alto: Alto de la ventana
+        fondo: Ruta de la imagen de fondo
+        tienda_img: Ruta de la imagen de la tienda
+        recompensa_img: Ruta de la imagen del mostrador de recompensa
+        vidas_img: Ruta de la imagen del mostrador de vidas
         """
         self.ancho = ancho
         self.alto = alto
