@@ -26,46 +26,30 @@ def generar_enemigo_aleatorio(ancho, alto, enemigos, enemigo_imgs):
     enemigos.append(enemigo)
 
 
-def mostrar_mensaje(screen, mensaje, font, color, posicion):
-    """Función para mostrar un mensaje de texto en la pantalla."""
-    texto = font.render(mensaje, True, color)
-    screen.blit(texto, posicion)
+# Función para mostrar el menú al final del juego
+def mostrar_menu_final(screen, mensaje, tiempo, reintentar=True):
+    fuente = pygame.font.SysFont("Arial", 36)
+    texto_mensaje = fuente.render(mensaje, True, (255, 255, 255))
+    texto_tiempo = fuente.render(
+        f"Tiempo: {int(tiempo)} segundos", True, (255, 255, 255))
 
+    # Posicionar el mensaje en el centro de la pantalla
+    screen.fill((0, 0, 0))  # Fondo negro
+    screen.blit(texto_mensaje, (screen.get_width() //
+                2 - texto_mensaje.get_width() // 2, 200))
+    screen.blit(texto_tiempo, (screen.get_width() //
+                2 - texto_tiempo.get_width() // 2, 250))
 
-def menu_fin_de_juego(screen, tiempo, victoria=True):
-    """Muestra el menú de fin de juego con opciones de reintentar o salir."""
-    font = pygame.font.Font(None, 50)
-    color = (255, 255, 255)
-
-    if victoria:
-        mensaje = f"¡GANASTE! Tiempo: {int(tiempo)} segundos"
-        opciones = ["Reintentar", "Salir"]
+    if reintentar:
+        opcion_texto = fuente.render(
+            "Presiona 'R' para reintentar o 'S' para salir.", True, (255, 255, 255))
     else:
-        mensaje = f"Perdiste. Tiempo: {int(tiempo)} segundos"
-        opciones = ["Continuar", "Salir"]
+        opcion_texto = fuente.render(
+            "Presiona 'C' para continuar o 'S' para salir.", True, (255, 255, 255))
 
-    # Mostrar mensaje de victoria o derrota
-    mostrar_mensaje(screen, mensaje, font, color, (400, 300))
-
-    # Mostrar opciones
-    for i, opcion in enumerate(opciones):
-        mostrar_mensaje(screen, opcion, font, color, (400, 400 + i * 60))
-
+    screen.blit(opcion_texto, (screen.get_width() //
+                2 - opcion_texto.get_width() // 2, 300))
     pygame.display.flip()
-
-    # Manejar la entrada del jugador para reintentar o salir
-    run_menu = True
-    while run_menu:
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                return "salir"
-            if evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_UP:  # Seleccionar arriba
-                    return "reintentar" if victoria else "continuar"
-                if evento.key == pygame.K_DOWN:  # Seleccionar abajo
-                    return "salir"
-                if evento.key == pygame.K_RETURN:  # Seleccionar la opción
-                    return "reintentar" if victoria else "continuar"
 
 
 def main():
@@ -115,16 +99,12 @@ def main():
 
     # Guardamos el tiempo de la última generación de enemigo
     last_enemy_time = time.time()
-
-    # Inicializamos el reloj
-    start_time = time.time()  # El tiempo al inicio del juego
     run_game = True
+    tiempo_inicio = time.time()
 
     while run_game:
-        # Calculamos el tiempo transcurrido
-        elapsed_time = time.time() - start_time  # Tiempo en segundos desde el inicio
-
         # Dibujar el fondo del mapa primero
+        elapsed_time = time.time() - tiempo_inicio
         mapa.dibujar_mapa(contador_vida, contador_bajas, elapsed_time)
 
         # Controlar la generación de enemigos cada 3 segundos
@@ -188,9 +168,9 @@ def main():
             # Determinar la imagen según el tipo de colisión
             if tipo == "impacto personaje":
                 imagen_explosion = imagen_explosion_personaje
-                contador_vida -= 1
+                contador_vida = contador_vida-1
             elif tipo == "impacto enemigo":
-                contador_bajas += 1
+                contador_bajas = contador_bajas + 1
                 imagen_explosion = imagen_explosion_enemigo
             elif tipo == "impacto entre balas":
                 imagen_explosion = imagen_explosion_balas
@@ -206,22 +186,25 @@ def main():
                 combate.explosiones.remove(explosion)
 
         if personaje.verificar_progreso():
-            resultado = menu_fin_de_juego(
-                mapa.screen, elapsed_time, victoria=True)
-            if resultado == "salir":
-                break
-            elif resultado == "reintentar":
-                main()  # Reiniciar el juego
-                return
-
-        if contador_vida <= 0:  # Si pierde
-            resultado = menu_fin_de_juego(
-                mapa.screen, elapsed_time, victoria=False)
-            if resultado == "salir":
-                break
-            elif resultado == "continuar":
-                main()  # Continuar el juego (reiniciar)
-                return
+            # Mostrar mensaje de victoria
+            mostrar_menu_final(mapa.screen, "¡Ganaste!",
+                               time.time() - tiempo_inicio, reintentar=True)
+            # Esperar la respuesta del jugador
+            tecla = pygame.key.get_pressed()
+            if tecla[pygame.K_r]:  # Reintentar
+                main()
+            elif tecla[pygame.K_s]:  # Salir
+                run_game = False
+        elif contador_vida <= 0:
+            # Mostrar mensaje de derrota
+            mostrar_menu_final(mapa.screen, "¡Perdiste!",
+                               time.time() - tiempo_inicio, reintentar=False)
+            # Esperar la respuesta del jugador
+            tecla = pygame.key.get_pressed()
+            if tecla[pygame.K_s]:  # Salir
+                run_game = False
+            elif tecla[pygame.K_r]:  # Reintentar
+                main()
 
         # Actualizar la pantalla
         pygame.display.flip()
