@@ -19,7 +19,7 @@ class Proyectil:
         # Cargar la imagen del proyectil
         self.imagen = pygame.image.load(imagen)
         self.imagen = pygame.transform.scale(
-            self.imagen, (10, 20))  # Ajusta el tamaño de la imagen
+            self.imagen, (8, 15))  # Ajusta el tamaño de la imagen
         self.rect = self.imagen.get_rect()
         self.rect.topleft = (x, y)
 
