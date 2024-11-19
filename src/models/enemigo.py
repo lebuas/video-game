@@ -36,7 +36,7 @@ class Enemigo:
         # Controlar el tiempo de disparo
         self.last_shot_time = time.time()
         # Intervalo de disparo en segundos (puedes ajustarlo)
-        self.shot_interval = 2
+        self.shot_interval = 1
 
     def mover(self):
         """Mueve al enemigo dentro del área definida."""

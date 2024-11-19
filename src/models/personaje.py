@@ -5,7 +5,7 @@ from proyectil import Proyectil
 
 
 class Personaje:
-    def __init__(self, x, y, imagen):
+    def __init__(self, x, y, imagen, vida, bajas):
         """
         Inicializa el personaje.
         :param x: Posición horizontal
@@ -21,6 +21,8 @@ class Personaje:
         self.velocidad = 8  # Velocidad de movimiento
         self.last_shot_time = 0  # Tiempo del último disparo
         self.shot_delay = 0.3  # 300 milisegundos entre disparos
+        self.vida = vida
+        self.bajas = bajas
 
     def mover(self, direccion):
         """
@@ -53,6 +55,12 @@ class Personaje:
                 self.x-5 + self.rect.width // 2, self.y, proyectil_img)
             proyectiles.append(proyectil)
             self.last_shot_time = time.time()  # Actualizamos el tiempo del último disparo
+
+    def verificar_progreso(self):
+        if self.vida < 5:
+            return False
+        elif self.bajas == 10:
+            return True
 
     def dibujar(self, screen):
         """
