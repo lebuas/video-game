@@ -1,6 +1,7 @@
 
+import time
 import pygame
-import sys
+from proyectil import Proyectil
 
 
 class Personaje:
@@ -18,6 +19,8 @@ class Personaje:
         self.rect = self.imagen.get_rect()
         self.rect.topleft = (x, y)
         self.velocidad = 8  # Velocidad de movimiento
+        self.last_shot_time = 0  # Tiempo del último disparo
+        self.shot_delay = 0.3  # 300 milisegundos entre disparos
 
     def mover(self, direccion):
         """
@@ -36,6 +39,20 @@ class Personaje:
             self.x = 1200 - self.rect.width
 
         self.rect.topleft = (self.x, self.y)
+
+    def disparar(self, proyectiles, proyectil_img):
+        """
+        Maneja el disparo de proyectiles desde la posición del personaje.
+        :param proyectiles: Lista de proyectiles actuales en el juego.
+        :param proyectil_img: Ruta de la imagen del proyectil.
+        """
+        # Comprobamos si el tiempo entre disparos ha pasado
+        if time.time() - self.last_shot_time >= self.shot_delay:
+            # Crear un proyectil en la posición del personaje
+            proyectil = Proyectil(
+                self.x-5 + self.rect.width // 2, self.y, proyectil_img)
+            proyectiles.append(proyectil)
+            self.last_shot_time = time.time()  # Actualizamos el tiempo del último disparo
 
     def dibujar(self, screen):
         """

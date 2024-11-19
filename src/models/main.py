@@ -36,6 +36,8 @@ def main():
     recompensa_img = "../assets/images/map/recompensa.png"
     vidas_img = "../assets/images/map/vida.png"
     personaje_img = "../assets/images/player/personaje_n1.png"
+    proyectil_img = "../assets/images/weapons/bala.png"
+    proyectil_img_enemigo = "../assets/images/weapons/bala_enemigo.png"
 
     # Rutas de las imágenes de los enemigos (3 tipos)
     enemigo_imgs = {
@@ -86,10 +88,7 @@ def main():
 
         # Disparo con la tecla Espacio
         if teclas[pygame.K_SPACE]:
-            # Crear un proyectil en la posición del personaje
-            proyectil = Proyectil(
-                personaje.x + personaje.rect.width // 2, personaje.y)
-            proyectiles.append(proyectil)
+            personaje.disparar(proyectiles, proyectil_img)
 
         # Mover los proyectiles
         for proyectil in proyectiles[:]:
@@ -97,9 +96,11 @@ def main():
             if proyectil.y < 0:  # El proyectil ha salido de la pantalla
                 proyectiles.remove(proyectil)
 
-        # Mover los enemigos
+        # Mover los enemigos y hacer que disparen
         for enemigo in enemigos:
             enemigo.mover()
+            # Actualiza el disparo del enemigo
+            enemigo.actualizar_disparo(proyectiles, proyectil_img_enemigo)
 
         # Dibujar el mapa y los objetos
         personaje.dibujar(mapa.screen)  # Dibujar el personaje después

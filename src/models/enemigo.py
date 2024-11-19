@@ -1,5 +1,6 @@
-
+import time
 import pygame
+from proyectil import Proyectil
 import random
 
 
@@ -17,16 +18,13 @@ class Enemigo:
         """
         self.x = x
         self.y = y
-        self.imagen = pygame.image.load(imagen)  # Cargar la imagen del enemigo
-        self.imagen = pygame.transform.scale(
-            self.imagen, (100, 100))  # Ajustar el tamaño
+        self.imagen = pygame.image.load(imagen)
+        self.imagen = pygame.transform.scale(self.imagen, (100, 100))
         self.rect = self.imagen.get_rect()
         self.rect.topleft = (x, y)
-        self.velocidad_x = 8  # Velocidad de movimiento en el eje X
-        self.velocidad_y = 4  # Velocidad de movimiento en el eje Y
-        # Dirección aleatoria horizontal (izquierda o derecha)
+        self.velocidad_x = 8
+        self.velocidad_y = 4
         self.direccion_x = random.choice([-1, 1])
-        # Dirección aleatoria vertical (arriba o abajo)
         self.direccion_y = random.choice([-1, 1])
 
         # Límites de movimiento
@@ -35,26 +33,46 @@ class Enemigo:
         self.limite_arriba = limite_arriba
         self.limite_abajo = limite_abajo
 
-    def mover(self):
-        """
-        Mueve al enemigo dentro del área definida.
-        El enemigo puede moverse horizontal y verticalmente.
-        """
-        # Movimiento horizontal
-        self.x += self.velocidad_x * self.direccion_x
-        if self.x <= self.limite_izquierda or self.x + self.rect.width >= self.limite_derecha:
-            self.direccion_x *= -1  # Cambiar dirección horizontal
+        # Controlar el tiempo de disparo
+        self.last_shot_time = time.time()
+        # Intervalo de disparo en segundos (puedes ajustarlo)
+        self.shot_interval = 2
 
-        # Movimiento vertical
-        self.y += self.velocidad_y * self.direccion_y
+    def mover(self):
+        """Mueve al enemigo dentro del área definida."""
+        if self.x <= self.limite_izquierda or self.x + self.rect.width >= self.limite_derecha:
+            self.direccion_x *= -1
+
         if self.y <= self.limite_arriba or self.y + self.rect.height >= self.limite_abajo:
-            self.direccion_y *= -1  # Cambiar dirección vertical
+            self.direccion_y *= -1
+
+        self.x += self.velocidad_x * self.direccion_x
+        self.y += self.velocidad_y * self.direccion_y
+
+        self.x = max(self.limite_izquierda, min(
+            self.x, self.limite_derecha - self.rect.width))
+        self.y = max(self.limite_arriba, min(
+            self.y, self.limite_abajo - self.rect.height))
 
         self.rect.topleft = (self.x, self.y)
 
+    def disparar(self, imagen_proyectil):
+        """Dispara un proyectil hacia abajo."""
+        proyectil = Proyectil(self.x + self.rect.width // 2, self.y +
+                              self.rect.height, imagen_proyectil, direccion_y=1)
+        return proyectil
+
+    def actualizar_disparo(self, proyectiles, imagen_proyectil):
+        """Controla el disparo del enemigo y lo actualiza si es el momento adecuado."""
+        current_time = time.time()
+
+        # Verificar si ha pasado el intervalo desde el último disparo
+        if current_time - self.last_shot_time >= self.shot_interval:
+            # Disparar un proyectil
+            proyectil = self.disparar(imagen_proyectil)
+            proyectiles.append(proyectil)
+            self.last_shot_time = current_time  # Actualizar el tiempo del último disparo
+
     def dibujar(self, screen):
-        """
-        Dibuja al enemigo en la pantalla.
-        :param screen: Superficie en la que se va a dibujar el enemigo.
-        """
+        """Dibuja al enemigo en la pantalla."""
         screen.blit(self.imagen, self.rect)

@@ -59,7 +59,7 @@ class Mapa:
         # Mostrar el número de recompensas
         recompensas_text = font.render(
             f"{recompensas}", True, (255, 255, 255))
-        self.screen.blit(recompensas_text, (31.5, 55))
+        self.screen.blit(recompensas_text, (31., 55))
 
         # Mostrar el tiempo restante
         tiempo_text = font.render(
