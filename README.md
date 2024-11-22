@@ -1,4 +1,3 @@
-
 # Videojuego: Aviator
 
 ## Integrantes del Proyecto
@@ -67,8 +66,8 @@ Esperamos que se instalen
 Para ejecutar la aplicación, en la terminal, navegamos hasta el  directorio raiz donde clonamos el repositorio,abrimos una terminal desde esa ruta e ingresamos los siguientes comandos:
 
 
-En linux o entornos linux:
-```cd app/models/
+```bash
+ cd app/models/
 ```
 Una vez en la ruta models ingresamos el siguientes comando par ejecutar el juego:
 
