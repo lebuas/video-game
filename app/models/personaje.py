@@ -22,12 +22,11 @@ class Personaje:
         self.last_shot_time = 0  # Tiempo del último disparo
         self.shot_delay = 0.3  # 300 milisegundos entre disparos
         self.vida = vida
-        self.bajas = bajas
+        self.kills = bajas
 
     def mover(self, direccion):
         """
         Mueve al personaje a la izquierda o a la derecha.
-        :param direccion: 'izquierda' o 'derecha'
         """
         if direccion == 'izquierda':
             self.x -= self.velocidad
@@ -45,8 +44,8 @@ class Personaje:
     def disparar(self, proyectiles, proyectil_img):
         """
         Maneja el disparo de proyectiles desde la posición del personaje.
-        :param proyectiles: Lista de proyectiles actuales en el juego.
-        :param proyectil_img: Ruta de la imagen del proyectil.
+        proyectiles: Lista de proyectiles actuales en el juego.
+        proyectil_img: Ruta de la imagen del proyectil.
         """
         # Comprobamos si el tiempo entre disparos ha pasado
         if time.time() - self.last_shot_time >= self.shot_delay:
@@ -56,15 +55,15 @@ class Personaje:
             proyectiles.append(proyectil)
             self.last_shot_time = time.time()  # Actualizamos el tiempo del último disparo
 
-    def verificar_progreso(self):
+    # Aqui se controla la victoria o derrota
+    def verificar_progreso(self, tiempo):
         if self.vida < 5:
             return False
-        elif self.bajas == 10:
+        elif self.kills >= 5 and tiempo <= 60:
             return True
 
     def dibujar(self, screen):
         """
         Dibuja al personaje en la pantalla.
-        :param screen: Superficie en la que se va a dibujar el personaje.
         """
         screen.blit(self.imagen, self.rect)

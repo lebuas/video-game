@@ -8,10 +8,10 @@ class Trampa:
         """
         Crea una nueva trampa en las coordenadas dadas.
 
-        :param x: Coordenada X de la trampa.
-        :param y: Coordenada Y de la trampa.
-        :param nivel: Nivel de la trampa (1, 2 o 3).
-        :param imagen_trampa: Ruta de la imagen de la trampa.
+        x: Coordenada X de la trampa.
+        y: Coordenada Y de la trampa.
+        nivel: Nivel de la trampa (1, 2 o 3).
+        imagen_trampa: Ruta de la imagen de la trampa.
         """
         self.x = x
         self.y = y

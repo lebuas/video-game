@@ -1,0 +1,116 @@
+@startuml
+class Combate {
+    - personaje: Personaje
+    - enemigos: List<Enemigo>
+    - proyectiles: List<Proyectil>
+    - proyectiles_enemigos: List<Proyectil>
+    - trampas: List<Trampa>
+    - explosiones: List<Explosion>
+    + chequear_colisiones(): List<Dict>
+    + colision_bala_personaje(): Dict
+    + colision_bala_enemigo(): Dict
+    + colision_bala_bala(): Dict
+}
+
+class Personaje {
+    - x: int
+    - y: int
+    - imagen: str
+    - rect: Rect
+    - velocidad: int
+    - vida: int
+    - bajas: int
+    - last_shot_time: float
+    + mover(direccion: str): void
+    + disparar(proyectiles: List<Proyectil>, proyectil_img: str): void
+    + verificar_progreso(): bool
+    + dibujar(screen: Surface): void
+}
+
+class Enemigo {
+    - x: int
+    - y: int
+    - imagen: str
+    - rect: Rect
+    - velocidad_x: int
+    - velocidad_y: int
+    - direccion_x: int
+    - direccion_y: int
+    - limite_izquierda: int
+    - limite_derecha: int
+    - limite_arriba: int
+    - limite_abajo: int
+    - last_shot_time: float
+    + mover(): void
+    + disparar(imagen_proyectil: str): Proyectil
+    + actualizar_disparo(proyectiles: List<Proyectil>, imagen_proyectil: str): void
+    + dibujar(screen: Surface): void
+}
+
+class Proyectil {
+    - x: int
+    - y: int
+    - imagen: str
+    - rect: Rect
+    - velocidad: int
+    - direccion_y: int
+    + mover(): void
+    + dibujar(screen: Surface): void
+}
+
+class Explosion {
+    - x: int
+    - y: int
+    - imagen: str
+    - rect: Rect
+    - inicio: float
+    - duracion: float
+    + dibujar(pantalla: Surface): void
+    + ha_terminado(): bool
+    + generar(coordenadas: Tuple, imagen_explosion: str, duracion: float): Explosion
+}
+
+class Mapa {
+    - ancho: int
+    - alto: int
+    - fondo: Surface
+    - tienda: Surface
+    - recompensa: Surface
+    - vidas: Surface
+    + configurar_mapa(): void
+    + dibujar_mapa(vidas: int, recompensas: int, tiempo_restante: float): void
+}
+
+class Tienda {
+    - inventario: List
+    + comprar(item: str): bool
+    + mostrar_inventario(): void
+}
+
+class Recompensa {
+    - tipo: str
+    - valor: int
+    + activar(): void
+}
+
+class Trampa {
+    - x: int
+    - y: int
+    - imagen: str
+    - rect: Rect
+    - nivel: int
+    - rango_daño: int
+    + activar(): void
+}
+
+Combate --> Personaje
+Combate *-- Proyectil
+Combate o-- Enemigo
+Combate o-- Explosion
+Combate *-- Trampa
+Mapa o-- Tienda
+Mapa o-- Recompensa
+Mapa o-- Personaje
+Mapa o-- Trampa
+Enemigo <|-- Personaje
+@enduml

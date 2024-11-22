@@ -8,13 +8,13 @@ class Enemigo:
     def __init__(self, x, y, imagen, limite_izquierda, limite_derecha, limite_arriba, limite_abajo):
         """
         Inicializa el enemigo.
-        :param x: Posición inicial horizontal
-        :param y: Posición inicial vertical
-        :param imagen: Ruta de la imagen del enemigo
-        :param limite_izquierda: El límite izquierdo de movimiento
-        :param limite_derecha: El límite derecho de movimiento
-        :param limite_arriba: El límite superior de movimiento
-        :param limite_abajo: El límite inferior de movimiento
+        :x: Posición inicial horizontal
+        :y: Posición inicial vertical
+        :imagen: Ruta de la imagen del enemigo
+        :limite_izquierda: El límite izquierdo de movimiento
+        :limite_derecha: El límite derecho de movimiento
+        :limite_arriba: El límite superior de movimiento
+        :limite_abajo: El límite inferior de movimiento
         """
         self.x = x
         self.y = y
@@ -22,8 +22,8 @@ class Enemigo:
         self.imagen = pygame.transform.scale(self.imagen, (100, 100))
         self.rect = self.imagen.get_rect()
         self.rect.topleft = (x, y)
-        self.velocidad_x = 8
-        self.velocidad_y = 4
+        self.velocidad_x = 10
+        self.velocidad_y = 5
         self.direccion_x = random.choice([-1, 1])
         self.direccion_y = random.choice([-1, 1])
 
@@ -36,7 +36,7 @@ class Enemigo:
         # Controlar el tiempo de disparo
         self.last_shot_time = time.time()
         # Intervalo de disparo en segundos (puedes ajustarlo)
-        self.shot_interval = 1
+        self.shot_interval = 0.5
 
     def mover(self):
         """Mueve al enemigo dentro del área definida."""

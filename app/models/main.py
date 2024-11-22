@@ -8,8 +8,6 @@ from enemigo import Enemigo  # Importamos la clase Enemigo
 from combate import Combate
 from explosion import Explosion
 
-# Función para generar enemigos aleatorios
-
 
 def generar_enemigo_aleatorio(ancho, alto, enemigos, enemigo_imgs):
     """Genera un enemigo aleatorio de tipo aleatorio y lo agrega a la lista de enemigos."""
@@ -26,7 +24,50 @@ def generar_enemigo_aleatorio(ancho, alto, enemigos, enemigo_imgs):
     enemigos.append(enemigo)
 
 
-# Función para mostrar el menú al final del juego
+def mostrar_bienvenida(screen):
+    """Pantalla de bienvenida con las reglas del juego."""
+    fuente = pygame.font.SysFont("Arial", 14)
+    mensaje = [
+        "¡Bienvenido al Juego!",
+        "OBJETIVO: Alcanzar un minimo de 20 kills en menos un minutos"
+
+        "LAS REGALAS SON SIMPLES:",
+        "0. Tienes 5 vidas"
+        "1. Mueve a tu personaje con las teclas de flechas izquierda y derecha.",
+        "2. Dispara con la tecla Espacio.",
+        "3. Salidad de emergencia de la partida preciona la leta s"
+        "4. Evita que los enemigos te alcancen.",
+        "4. Si tu vida llega a 0, PIERDES...",
+        ""
+        "Presiona 'A' para aceptar y comenzar.",
+        "Presiona 'R' para rechazar y salir."
+    ]
+
+    screen.fill((0, 0, 0))  # Fondo negro
+
+    # Mostrar cada línea de las reglas
+    for i, texto in enumerate(mensaje):
+        texto_renderizado = fuente.render(texto, True, (255, 255, 255))
+        screen.blit(texto_renderizado, (screen.get_width() // 2 -
+                    texto_renderizado.get_width() // 2, 150 + i * 50))
+
+    pygame.display.flip()
+
+    # Esperar a que el jugador presione 'A' o 'R'
+    esperando = True
+    while esperando:
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_a:  # Aceptar
+                    esperando = False
+                elif evento.key == pygame.K_r:  # Rechazar
+                    pygame.quit()
+                    sys.exit()
+
+
 def mostrar_menu_final(screen, mensaje, tiempo, reintentar=True):
     fuente = pygame.font.SysFont("Arial", 36)
     texto_mensaje = fuente.render(mensaje, True, (255, 255, 255))
@@ -45,7 +86,7 @@ def mostrar_menu_final(screen, mensaje, tiempo, reintentar=True):
             "Presiona 'R' para reintentar o 'S' para salir.", True, (255, 255, 255))
     else:
         opcion_texto = fuente.render(
-            "Presiona 'C' para continuar o 'S' para salir.", True, (255, 255, 255))
+            "Presiona 'R' para reintentar o 'S' para salir.", True, (255, 255, 255))
 
     screen.blit(opcion_texto, (screen.get_width() //
                 2 - opcion_texto.get_width() // 2, 300))
@@ -93,6 +134,10 @@ def main():
     combate = Combate(personaje, enemigos,
                       proyectiles_pesonaje, proyectiles_enemigo, tramapas)
 
+    # Mostrar pantalla de bienvenida
+    screen = pygame.display.set_mode((ancho, alto))
+    mostrar_bienvenida(screen)
+
     # Generar el primer enemigo antes de entrar en el bucle
     generar_enemigo_aleatorio(ancho, alto, enemigos, enemigo_imgs)
     mapa.configurar_mapa()
@@ -107,9 +152,11 @@ def main():
         elapsed_time = time.time() - tiempo_inicio
         mapa.dibujar_mapa(contador_vida, contador_bajas, elapsed_time)
 
-        # Controlar la generación de enemigos cada 3 segundos
+        """
+         Controlar la generación de enemigos cada 3 segundos
+        """
         current_time = time.time()  # Obtenemos el tiempo actual
-        if current_time - last_enemy_time >= 3:
+        if current_time - last_enemy_time >= 2:
             generar_enemigo_aleatorio(ancho, alto, enemigos, enemigo_imgs)
             last_enemy_time = current_time  # Actualizamos el tiempo de la última generación
 
@@ -168,9 +215,9 @@ def main():
             # Determinar la imagen según el tipo de colisión
             if tipo == "impacto personaje":
                 imagen_explosion = imagen_explosion_personaje
-                contador_vida = contador_vida-1
+                contador_vida -= 1
             elif tipo == "impacto enemigo":
-                contador_bajas = contador_bajas + 1
+                contador_bajas += 1
                 imagen_explosion = imagen_explosion_enemigo
             elif tipo == "impacto entre balas":
                 imagen_explosion = imagen_explosion_balas
@@ -185,7 +232,8 @@ def main():
             if explosion.ha_terminado():
                 combate.explosiones.remove(explosion)
 
-        if personaje.verificar_progreso():
+        # if personaje.verificar_progreso(tiempo_atual):
+        if contador_bajas >= 20 and (time.time()-tiempo_inicio) <= 60:
             # Mostrar mensaje de victoria
             mostrar_menu_final(mapa.screen, "¡Ganaste!",
                                time.time() - tiempo_inicio, reintentar=True)
@@ -195,6 +243,7 @@ def main():
                 main()
             elif tecla[pygame.K_s]:  # Salir
                 run_game = False
+
         elif contador_vida <= 0:
             # Mostrar mensaje de derrota
             mostrar_menu_final(mapa.screen, "¡Perdiste!",
@@ -205,6 +254,11 @@ def main():
                 run_game = False
             elif tecla[pygame.K_r]:  # Reintentar
                 main()
+        # si se requiere cerrrar el juego de forma rependtiana
+        # se precin la tecal s
+        tecla = pygame.key.get_pressed()
+        if tecla[pygame.K_s]:
+            sys.exit()
 
         # Actualizar la pantalla
         pygame.display.flip()
