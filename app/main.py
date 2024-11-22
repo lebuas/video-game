@@ -60,22 +60,22 @@ def main():
     ancho, alto = 1200, 800
 
     # Rutas relativas de las imágenes (ajustadas)
-    ruta_fondo = "../assets/map/fondo.png"
-    tienda_img = "../assets/shops/tienda.png"
-    recompensa_img = "../assets/map/recompensa.png"
-    vidas_img = "../assets/map/vida.png"
-    personaje_img = "../assets/player/personaje_n1.png"
-    proyectil_img = "../assets/weapons/bala.png"
-    proyectil_img_enemigo = "../assets/weapons/bala_enemigo.png"
-    imagen_explosion_personaje = "../assets/effects/humo_n3.png"
-    imagen_explosion_enemigo = "../assets/effects/explosion.png"
-    imagen_explosion_balas = "../assets/effects/humo_n1.png"
+    ruta_fondo = "assets/map/fondo.png"
+    tienda_img = "assets/shops/tienda.png"
+    recompensa_img = "assets/map/recompensa.png"
+    vidas_img = "assets/map/vida.png"
+    personaje_img = "assets/player/personaje_n1.png"
+    proyectil_img = "assets/weapons/bala.png"
+    proyectil_img_enemigo = "assets/weapons/bala_enemigo.png"
+    imagen_explosion_personaje = "assets/effects/humo_n3.png"
+    imagen_explosion_enemigo = "assets/effects/explosion.png"
+    imagen_explosion_balas = "assets/effects/humo_n1.png"
 
     # Rutas de las imágenes de los enemigos (3 tipos)
     enemigo_imgs = {
-        1: "../assets/enemies/enemigo_n1.png",  # Enemigo Nivel 1
-        2: "../assets/enemies/enemigo_n2.png",  # Enemigo Nivel 2
-        3: "../assets/enemies/enemigo_n3.png",  # Enemigo Nivel 3
+        1: "assets/enemies/enemigo_n1.png",  # Enemigo Nivel 1
+        2: "assets/enemies/enemigo_n2.png",  # Enemigo Nivel 2
+        3: "assets/enemies/enemigo_n3.png",  # Enemigo Nivel 3
     }
 
     # Crear una instancia del personaje
