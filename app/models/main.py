@@ -26,7 +26,7 @@ def generar_enemigo_aleatorio(ancho, alto, enemigos, enemigo_imgs):
 
 def mostrar_bienvenida(screen):
     """Pantalla de bienvenida con las reglas del juego."""
-    fuente = pygame.font.SysFont("Arial", 14)
+    fuente = pygame.font.SysFont("Arial", 16)
     mensaje = [
         "¡Bienvenido al Juego!",
         "OBJETIVO: Alcanzar un minimo de 20 kills en menos un minutos"
@@ -233,7 +233,7 @@ def main():
                 combate.explosiones.remove(explosion)
 
         # if personaje.verificar_progreso(tiempo_atual):
-        if contador_bajas >= 20 and (time.time()-tiempo_inicio) <= 60:
+        if contador_bajas >= 20 and elapsed_time <= 60:
             # Mostrar mensaje de victoria
             mostrar_menu_final(mapa.screen, "¡Ganaste!",
                                time.time() - tiempo_inicio, reintentar=True)
@@ -244,7 +244,7 @@ def main():
             elif tecla[pygame.K_s]:  # Salir
                 run_game = False
 
-        elif contador_vida <= 0:
+        elif contador_vida <= 0 or elapsed_time > 10:
             # Mostrar mensaje de derrota
             mostrar_menu_final(mapa.screen, "¡Perdiste!",
                                time.time() - tiempo_inicio, reintentar=False)
